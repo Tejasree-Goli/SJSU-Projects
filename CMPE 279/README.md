@@ -1,4 +1,5 @@
-### Detection of Cyber Security Threats
+## Detection of Cyber Security Threats
+
 
 **Objective:** With the increasing number of systems connecting to the internet, safeguarding networks against various cyber threats has become more critical than ever. The cybersecurity landscape is evolving rapidly, prompting companies to invest millions in advanced technologies to protect their businesses and fortify defenses against potential attacks. To address these challenges, leveraging Artificial Intelligence (AI) and Machine Learning (ML) technology is crucial for automating the detection and response to cyber threats. 
 
