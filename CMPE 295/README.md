@@ -1,4 +1,4 @@
-# CMPE-295: UAV-Based Powerline Problem Inspection and Classification using Machine Learning Approaches
+# UAV-Based Powerline Problem Inspection and Classification using Machine Learning Approaches
 
 
 **Objective:**
