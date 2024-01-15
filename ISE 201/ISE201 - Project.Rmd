@@ -1,0 +1,427 @@
+---
+title: "ISE201 - Final Project"
+author: "Teja Sree Goli"
+date: "2023-12-04"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+The title of the dataset chosen is "Sustainability Development Report - 2023". The dataset comprises comprehensive data related to sustainability and progress towards Sustainable Development Goals (SDGs) for numerous countries. I am curious to know "How has each country progressed towards achieving these Sustainable Development Goals (SDGs) over time, considering the impact of economic and geopolitical factors?" 
+
+Understanding the progress made by each country towards achieving the SDGs is crucial for assessing the effectiveness of global sustainability efforts and identifying areas of improvement to make improved future decision-making.
+
+Analyzing each individual country's progress helps in: holding the countries accountable and enhancing global collaboration. 
+
+## Data
+
+## <font size="4"> Data Source <br> </font> 
+
+Sazidul Islam. "Sustainability Development Report". kaggle.com <br>
+https://www.kaggle.com/datasets/sazidthe1/sustainable-development-report (accessed Oct 1, 2023). <br>
+
+## <font size="4"> Original Source: <br> </font>  https://sdgtransformationcenter.org/reports/sustainable-development-report-2023 <br>
+
+## <font size="4"> Data Collection <br> </font> 
+
+The Sustainable Development Report (SDR), sourced from Kaggle, reviews the progress made by countries each year on the Sustainable Development Goals since their adoption by the 193 UN Member States. The Sustainable Development Report 2023 takes stock of progress made (an observational study – it is an annual report – a global study). The report was published on the eve of the 2023 Paris Summit for a New Global Financial Pact. 
+
+## <font size="4"> Cases - Units of Observations <br> </font> 
+
+The report provides SDGs of 167 countries across the world. Each entry in the dataset presents information on a country's sustainability scores, regional classification, and performance on individual SDGs.  <br>
+
+## <font size="4"> Variables <br> </font> 
+
+There are total 21 variables in this dataset. For the purpose of this analysis, we focus on a subset of variables:<br>
+
+country <br>
+region <br>
+overall_score <br>
+scores of the 7 goals (poverty, education, health, climate, hunger, sustainable_cities, consumption_production) - goal_x_score <br>
+
+## <font size="4"> Type of Study <br> </font> 
+The data collected is observed over a period of time for various factors. Hence, it is an observational study.
+
+## <font size="4"> Data Cleanup <br> </font> 
+
+```{r libraries}
+library(dplyr)
+library(ggplot2)
+```
+
+Let's check for missing values and duplicated rows. <br>
+
+```{r Quality Check}
+sustainability_report <- read.csv("C:/Users/golit/OneDrive/Desktop/ISE 201/Project/sustainable_development_report_2023.csv")
+
+sum(is.na(sustainability_report))
+sum(duplicated(sustainability_report))
+```
+There are 72 missing values and no duplicated observations.<br>
+
+```{r Data Clean-Up}
+sustainability_report <- na.omit(sustainability_report)
+head(sustainability_report)
+```
+The null values are omitted for this analysis. 
+
+Rename the goal_x_score columns accordingly for the easy understanding of analysis.
+
+```{r Renaming variables}
+names(sustainability_report) <- c("country_code", "country", "region", "SDG_index", "poverty", "hunger", "health", "quality_education", "gender_equality", "clean_water",  "clean_energy", "economic_growth", "insfrastructure", "reduced_inequality", "sustainable_cities", "consumption_production", "climate_action",  "aquatic_life", "land_life","justice_institutins", "partnerships")
+
+names(sustainability_report)
+```
+To proceed with further analysis, we are considering only goal_x_scores
+
+```{r Filtered dataset}
+sustainability_report <- sustainability_report %>% select(country, region, SDG_index, poverty, hunger, health, quality_education, sustainable_cities, consumption_production, climate_action)
+
+head(sustainability_report)
+```
+
+## Exploratory Data Analysis
+
+To proceed with EDA, let's visualize the correlation between various input variables and the overall sustainability score (SDG_index).
+
+## <font size="4"> Visualization <br> </font> 
+
+```{r poverty vs overall score}
+ggplot(sustainability_report, aes(x=poverty, y=SDG_index)) + 
+  geom_point(aes(color = region)) +
+  geom_smooth(method="lm") + 
+  xlab("Poverty") + 
+  ylab("SDG_index") + 
+  labs(colour="region") +
+  ggtitle("All Regions: Poverty & Sustainability Score (2023)")
+```
+
+```{r}
+cor(sustainability_report$poverty,sustainability_report$SDG_index)
+```
+
+There is a high positive correlation between the poverty and sustainability scores indicating that poverty score has an impact on the overall growth of the countries.
+
+```{r summary_poverty}
+# Summary statistics 
+summary(sustainability_report[, c("SDG_index", "poverty")])
+
+# Summary 
+summary(sustainability_report$SDG_index)
+```
+```{r hunger vs overall score}
+ggplot(sustainability_report, aes(x= hunger, y=SDG_index)) + 
+  geom_point(aes(color = region)) +
+  geom_smooth(method="lm") + 
+  xlab("Hunger") + 
+  ylab("SDG_index") + 
+  labs(colour="region") +
+  ggtitle("All Regions: Hunger & Sustainability Score (2023)")
+```
+```{r correlation social support and overall score}
+cor(sustainability_report$hunger,sustainability_report$SDG_index)
+```
+If not significant, Hunger still acts as an important attribute in the overall sustainability score of a country.
+
+```{r summary_hunger}
+# Summary statistics 
+summary(sustainability_report[, c("SDG_index", "hunger")])
+
+# Summary 
+summary(sustainability_report$SDG_index)
+```
+If not significant, Hunger still acts as an important attribute in the overall sustainability score of a country.
+
+```{r health vs overall score}
+ggplot(sustainability_report, aes(x=health, y=SDG_index)) + 
+  geom_point(aes(color = region)) +
+  geom_smooth(method="lm") + 
+  xlab("Health") + 
+  ylab("SDG_index") + 
+  labs(colour="region") +
+  ggtitle("All Regions: Health & Sustainability Score (2023)")
+```
+
+```{r correlation  Health and Overall score}
+cor(sustainability_report$health,sustainability_report$SDG_index)
+```
+Health sector plays a very significant part in the overall growth of a country's sustainability.
+
+```{r summary_health}
+# Summary statistics 
+summary(sustainability_report[, c("SDG_index", "health")])
+
+# Summary 
+summary(sustainability_report$SDG_index)
+```
+
+```{r education vs overall score}
+ggplot(sustainability_report, aes(x=quality_education, y=SDG_index)) + 
+  geom_point(aes(color = region)) +
+  geom_smooth(method="lm") + 
+  xlab("Quality of Education") + 
+  ylab("SDG_index") + 
+  labs(colour="region") +
+  ggtitle("All Regions: Education & Sustainability Score (2023)")
+```
+
+```{r correlation  Education and Overall score}
+cor(sustainability_report$quality_education,sustainability_report$SDG_index)
+```
+
+The quality of education provided in a country does have a high positive correlation with the overall sustainable development of that country.
+
+```{r summary_education}
+# Summary statistics 
+summary(sustainability_report[, c("SDG_index", "quality_education")])
+
+# Summary 
+summary(sustainability_report$SDG_index)
+```
+
+```{r sustainable_cities vs overall score}
+ggplot(sustainability_report, aes(x=sustainable_cities, y=SDG_index)) + 
+  geom_point(aes(color = region)) +
+  geom_smooth(method="lm") + 
+  xlab("Sustainable Cities") + 
+  ylab("SDG_index") + 
+  labs(colour="region") +
+  ggtitle("All Regions: Sustainable Cities & Sustainability Score (2023)")
+```
+
+```{r correlation Sustainable Cities and Overall score}
+cor(sustainability_report$sustainable_cities,sustainability_report$SDG_index)
+```
+```{r summary_cities}
+# Summary statistics 
+summary(sustainability_report[, c("SDG_index", "sustainable_cities")])
+
+# Summary 
+summary(sustainability_report$SDG_index)
+```
+```{r consumption_production vs overall score}
+ggplot(sustainability_report, aes(x=consumption_production, y=SDG_index)) + 
+  geom_point(aes(color = region)) +
+  geom_smooth(method="lm") + 
+  xlab("Consumption and Production") + 
+  ylab("SDG_index") + 
+  labs(colour="region") +
+  ggtitle("All Regions: Consumption and Production & Sustainability Score (2023)")
+```
+
+```{r correlation  consumption_production and Overall score}
+cor(sustainability_report$consumption_production,sustainability_report$SDG_index)
+```
+The sustainable consumption and production has very less correlation with the growth of a country. Infact, it has a negative correlation.
+
+```{r summary_consumption_production}
+# Summary statistics 
+summary(sustainability_report[, c("SDG_index", "consumption_production")])
+
+# Summary 
+summary(sustainability_report$SDG_index)
+```
+
+```{r climate_action vs overall score}
+ggplot(sustainability_report, aes(x=climate_action, y=SDG_index)) + 
+  geom_point(aes(color = region)) +
+  geom_smooth(method="lm") + 
+  xlab("Climate Action") + 
+  ylab("SDG_index") + 
+  labs(colour="region") +
+  ggtitle("All Regions: Climate Action & Sustainability Score (2023)")
+```
+
+```{r correlation  Climate and Overall score}
+cor(sustainability_report$climate_action,sustainability_report$SDG_index)
+```
+
+The climate actions that a country takes towards its growth doesn't seem to have any correlation with the sustainable growth of a country.
+
+```{r summary_climate}
+# Summary statistics 
+summary(sustainability_report[, c("SDG_index", "climate_action")])
+
+# Summary 
+summary(sustainability_report$SDG_index)
+```
+
+From the visualizations, it can be observed that the factors like poverty, health, hunger have high influence on the sustainable economic growth of a nation than parameters like climate actions and amount of consumption/production.
+
+## Principal Component Analysis
+
+```{r PCA}
+#find principal components
+sdg_pca <- sustainability_report %>% 
+select(poverty, hunger, health, quality_education, sustainable_cities, consumption_production, climate_action)
+head(sdg_pca,3)
+```
+
+```{r correlation-matrix}
+#Find correlation matrix
+corr_mat <- cor(sdg_pca)
+corr_mat <- round(corr_mat, digits = 3)
+corr_mat
+```
+
+Extract the eigenvalues/variances of principal components
+
+```{r eigen-value}
+eigen_value <- eigen(corr_mat)
+
+# eigen values
+(values <- eigen_value$values)
+```
+Eigenvalues can be used to determine the number of principal components to retain after PCA.
+
+```{r eigen-vector}
+# eigen vector
+(vector <- eigen_value$vectors)
+```
+
+```{r}
+#Percent variance explained
+pve <- values / sum(values)
+pve
+```
+
+```{r}
+#Cumulative percent variance explained
+cumsum(pve)
+```
+
+```{r}
+plot(pve, xlab = "Principal Component",
+     ylab = "Proportion of Variance Explained",
+     type = "b")
+```
+
+```{r}
+plot(cumsum(pve), xlab = "Principal Component",
+     ylab = "Proportion of Variance Explained",
+     type = "b")
+```
+
+From the above calculations and charts, it can be said that the first three components explain ~90% of the variability in the data. Hence dimensions of the matrix can be reduced at the cost of remaining ~10% variability.
+
+```{r}
+eigen_vec = vector[,1:3]
+colnames(eigen_vec) = c("e1", "e2", "e3")
+row.names(eigen_vec) = colnames(sdg_pca)
+eigen_vec
+```
+
+From the matrix above, health seems to dominate the first principal component with other features holding almost equal weight. Second principal components seems be dominated by hunger. Third component is also highly dominated by hunger followed by climate_action. Let’s find scaled principal components. We will use this later to perform multiple linear regression.
+
+```{r}
+PC1_t <- as.matrix(scale(sdg_pca)) %*% eigen_vec[,1]
+PC2_t <- as.matrix(scale(sdg_pca)) %*% eigen_vec[,2]
+PC3_t <- as.matrix(scale(sdg_pca)) %*% eigen_vec[,3]
+
+PC_t  <- data.frame(PC1_t, PC2_t, PC3_t)
+PC_t["Country"] <- sustainability_report["country"]
+
+head(PC_t,3)
+```
+
+## Hypothesis Testing
+
+Now that we have a better understanding of what factors are influencing the SDG_index score of a country, I would like to check on specific parameters [education and health] about their influence on SDG score. 
+
+## <font size="2"> 1. Hypothesis Parameter - Education <br> </font>
+
+*Null Hypothesis (H0):* There is no significant difference in SDG_index based on quality of education. [This hypothesis suggests that the average SDG_index is the same for countries with different levels of quality of education.]
+
+*Alternative Hypothesis (H1):* There is a significant difference in SDG_index based on quality of education.
+
+*Test Statistic:* Relation between SDG Index and Quality of Education using two-sample T-statistic. [The t-statistic is used to compare the mean SDG_index values for the two groups of countries: those with high quality of education and those with low quality of education.]
+
+*Reference Distribution:* The t-distribution is used as the reference distribution for this test because the assumption of normality is not met.
+
+*Rejection Criteria:*
+  If the p-value is less than or equal to the significance level (0.05), we reject the null hypothesis (H₀) and conclude that there is a significant difference in SDG_index based on quality of education.
+
+  If the p-value is greater than the significance level, we fail to reject the null hypothesis (H₀) and conclude that there is not enough evidence to support the claim that there is a significant difference in SDG_index based on quality of education.
+  
+```{r ed-sample}
+# Two-sample t-test for the SDG index against quality education 
+t_test1 <- t.test(sustainability_report$SDG_index, sustainability_report$quality_education)
+t_test1
+```
+
+*Conclusion:* The p-value of the Two Sample t-test is 3.737e-06, which is much less than the significance level of 0.05. Therefore, we reject the null hypothesis and conclude that there is a statistically significant difference in the mean SDG_index score between countries with high quality of education and those with low quality of education. Specifically, the average SDG_index score is significantly higher for countries with high quality of education.
+
+  This finding suggests that quality of education plays a crucial role in influencing a country's overall progress towards achieving the Sustainable Development Goals. 
+
+## <font size="2"> 2. Hypothesis Parameter - Health <br> </font>
+
+*Null Hypothesis (H0):* There is no significant difference in SDG_index based on quality of health care [This hypothesis suggests that the average SDG_index is the same for countries with different levels of quality of health care provided.]
+
+*Alternative Hypothesis (H1):* There is a significant difference in SDG_index based on quality of health care
+
+*Test Statistic:* Relation between SDG Index and Quality of Health care using two-sample T-statistic. 
+
+*Reference Distribution:* The t-distribution is used as the reference distribution for this test because the assumption of normality is not met.
+
+*Rejection Criteria:*
+  If the p-value is less than or equal to the significance level (0.05), we reject the null hypothesis (H₀) and conclude that there is a significant difference in SDG_index based on quality of health care.
+
+  If the p-value is greater than the significance level, we fail to reject the null hypothesis (H₀) and conclude that there is not enough evidence to support the claim that there is a significant difference in SDG_index based on quality of health care.
+  
+```{r hlth-sample}
+# Two-sample t-test for the SDG index against health care 
+t_test2 <- t.test(sustainability_report$SDG_index, sustainability_report$health)
+t_test2
+```
+
+*Conclusion:* The p-value of the Two Sample t-test is 0.244, which is greater than the significance level of 0.05. Therefore, we fail to reject the null hypothesis and conclude that there is no statistically significant difference in the mean SDG_index score between countries with high quality healthcare and those with low quality healthcare.
+
+This finding suggests that healthcare may not be the significant determinant of a country's overall progress towards achieving the Sustainable Development Goals. 
+
+
+
+## Multiple Regression
+
+Our model has more than one predictor variable and one response and hence, we can use multiple regression model: Y =β0 + β1𝑋1 + β2𝑋2 + βk𝑋k + 𝜖
+
+```{r}
+model <- lm(sustainability_report$SDG_index~sustainability_report$poverty+sustainability_report$hunger+sustainability_report$health+sustainability_report$quality_education+sustainability_report$sustainable_cities+sustainability_report$consumption_production+sustainability_report$climate_action)
+
+summary(model)
+```
+
+F-statistic is a good indicator of whether there is a relationship between our predictor and the response variables. The further the F-statistic is from 1 the better it is. In our example the F-statistic is 240 which is relatively larger than 1 given the size of our data.
+
+It can also be seen that p-value is < 2.2e-16, which is highly significant. This means that, at least, one of the predictor variables is significantly related to the outcome variable. From the coefficients table, it seems that all features except quality_education and sustainable_cities are the most significant attributes.
+
+‘R-squared’ is an important measures of how well our model predicts the desired response variable which is equal to 0.944 in our case. This value means that combination of poverty, hunger, health, quality_education, sustainable_cities, consumption_production and climate_action explain 94.4% of the variability in ‘SDG Index’.
+
+Let’s also see if fitting a model based on PCA makes a difference since the dimension are reduced.
+
+```{r}
+pca_model <- lm(sustainability_report$SDG_index~PC1_t+PC2_t+PC3_t)
+summary(pca_model)
+```
+
+```{r}
+confint(pca_model)
+```
+
+```{r}
+par(mfrow = c(2,2))
+plot(pca_model)
+```
+
+Graph 1 is called as fitted vs residual plot. The red line is quite flat. Hence linearity assumptions is met.
+
+Graph 2 is known as QQ plot. The Y-axis is ordered, observed and standardized residuals. X-axis has ordered theoretical residuals. The points should fall roughly on the diagonal line and they do. Hence the assumption about the normal distribution of errors is also met.
+
+Graph 3 and 4 also indicate linearity and almost constant variance.
+
+# Conclusion:
+  Multiple linear regression suggests that  poverty, hunger, health, consumption_production, climate_action are the most important factors to consider when determining SDG Index. Even though it is not supported in this report, quality education should, in my opinion, play a role in determining the SDG Index. Further analysis on the factors not considered for this project might provide deeper insights into other aspects of a country's growth. In the future, it would be fascinating to investigate how the impact of these characteristics on SDG Goals of a country changes over time.
+  
