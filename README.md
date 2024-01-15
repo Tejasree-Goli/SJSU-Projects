@@ -19,3 +19,4 @@ The following projects are uploaded in this repo:
 
 ***ISE 201 - Maths for Decisions & Data Science***
 
+[Analysis of Sustainability Development Report - 2023]
