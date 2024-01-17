@@ -4,7 +4,7 @@ The projects in this repository are part of the various courses I have taken dur
 
 <br />
 The following projects are uploaded in this repo:
-<br>
+<br />
 
 ***CMPE 255 - Data Mining***
 
