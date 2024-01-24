@@ -32,4 +32,4 @@ The following projects are uploaded in this repo:
 
   - Analysis of Sustainability Development Report - 2023
 
-      [R, Statistical Analysis, Hypothesis Testing, Linear Regression, Exploratory Data Analysis]
+      [R, Statistical Analysis, Hypothesis Testing, Linear Regression, Exploratory Data Analysis, t-Test]
