@@ -8,7 +8,7 @@ The following projects are uploaded in this repo:
 
 ***CMPE 255 - Data Mining***
 
-  - Comparitive Analysis of Text Classification Methods
+  <li> Comparitive Analysis of Text Classification Methods </li>
 
       [Python, Machine Learning (Logistic Regression, KNN, SVM, multi-class classification) Deep Learning (LSTM, CNN), Natural Language Processing (NLTK), Data Cleaning, Google Colab, etc.,]
 
